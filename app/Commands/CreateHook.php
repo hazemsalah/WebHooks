@@ -31,15 +31,16 @@ class CreateHook extends Command
     public function handle()
     {
         $event = Event::where('name', $this->argument('event_name'))->first();
-        if ($event !=null) {
-            Webhook::create([
-                'event_name' => $this->argument('event_name'),
-                'callback_url' => $this->argument('callback_url')
-            ]);
-            $this->info("a new webhook has been created ...");
-        } else {
+        if ($event ==null) {
             $this->info("Event name not found , please create an event first");
+            return;
         }
+        Webhook::create([
+            'event_id' => $event->id,
+            'callback_url' => $this->argument('callback_url')
+        ]);
+
+        $this->info("a new webhook has been created ...");
     }
 
     /**

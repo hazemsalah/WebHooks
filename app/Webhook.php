@@ -9,7 +9,7 @@ class Webhook extends Model
     /**
      * @var array
      */
-    protected $fillable = ['event_name','callback_url'];
+    protected $fillable = ['event_id','callback_url'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
