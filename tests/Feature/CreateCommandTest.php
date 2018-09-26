@@ -11,7 +11,7 @@ class CreateCommandTest extends TestCase
      *
      * @return void
      */
-    public function testInspiringCommand()
+    public function testCreateCommand()
     {
         $this->artisan('create:event', ["name"=>"test"])
             ->expectsOutput('a new event has been created ...')
