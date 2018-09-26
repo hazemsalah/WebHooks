@@ -7,11 +7,10 @@ use Tests\TestCase;
 class CreateCommandTest extends TestCase
 {
     /**
-     * A basic test example.
-     *
+     * @test
      * @return void
      */
-    public function testCreateCommand()
+    public function create_event_test()
     {
         $this->artisan('create:event', ["name"=>"test"])
             ->expectsOutput('a new event has been created ...')
