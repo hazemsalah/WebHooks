@@ -24,11 +24,10 @@ class DispatchCommandTest extends TestCase
         $event = Event::create($eventData);
 
         $webhookData = [
-            "event_id" => $event->id,
             "callback_url" => "http://example.com"
         ];
 
-        $webhook = Webhook::create($webhookData);
+        $webhook = $event->webhooks()->create($webhookData);
 
 
         $commandData = [
