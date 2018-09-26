@@ -37,14 +37,13 @@ class Dispatch extends Command
             return;
         }
 
-        $webhooks = Webhook::where('event_id', $event->id)->get()->toArray();
-        foreach ($webhooks as $webhook) {
-
-            WebhookCallBack::create([
-                "webhook_id" => $webhook['id'],
+        $webhooks = Webhook::where('event_id', $event->id)->get();
+        $webhooks->each(function ($item, $key) {
+            $item->webhookcallback()->create([
                 "message" => $this->argument('message')
             ]);
-        }
+        });
+
         $this->info("Webhooks callbacks are created successfully");
     }
 

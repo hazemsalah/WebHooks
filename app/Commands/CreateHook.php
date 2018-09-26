@@ -35,8 +35,12 @@ class CreateHook extends Command
             $this->info("Event name not found , please create an event first");
             return;
         }
-        Webhook::create([
-            'event_id' => $event->id,
+        if (!(preg_match('%^(?:(?:https?|ftp)://)(?:\S+(?::\S*)?@|\d{1,3}(?:\.\d{1,3}){3}|(?:(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)(?:\.(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)*(?:\.[a-z\x{00a1}-\x{ffff}]{2,6}))(?::\d+)?(?:[^\s]*)?$%iu', $this->argument('callback_url')))) {
+            $this->info("This is not a valid URL");
+            return;
+        }
+
+        $event->webhooks()->create([
             'callback_url' => $this->argument('callback_url')
         ]);
 

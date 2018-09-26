@@ -15,7 +15,7 @@ class CreateWebhooksTable extends Migration
     {
         Schema::create('webhooks', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('event_id');
+            $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
             $table->string('callback_url');
             $table->timestamps();
         });

@@ -15,7 +15,7 @@ class CreateWebhookCallbacksTable extends Migration
     {
         Schema::create('webhook_call_backs', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('webhook_id');
+            $table->integer('webhook_id')->references('id')->on('webhooks')->onDelete('cascade');
             $table->string('message');
             $table->integer('scheduled_waiting_time')->default(0);
             $table->string('status')->default('failed');
