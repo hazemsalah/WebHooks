@@ -18,4 +18,11 @@ class Webhook extends Model
     {
         return $this->belongsTo(Event::class);
     }
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function webhookcallback()
+    {
+        return $this->belongsTo(WebhookCallBack::class);
+    }
 }

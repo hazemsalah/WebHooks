@@ -4,24 +4,25 @@ namespace App\Commands;
 
 use App\Event;
 use App\Webhook;
+use App\WebhookCallBack;
 use Illuminate\Console\Scheduling\Schedule;
 use LaravelZero\Framework\Commands\Command;
 
-class CreateHook extends Command
+class Dispatch extends Command
 {
     /**
      * The signature of the command.
      *
      * @var string
      */
-    protected $signature = 'create:hook {event_name} {callback_url}';
+    protected $signature = 'dispatch {event_name} {message}';
 
     /**
      * The description of the command.
      *
      * @var string
      */
-    protected $description = 'Creates a new webhook for a specific event';
+    protected $description = 'Dispatches event name with given message.';
 
     /**
      * Execute the console command.
@@ -35,12 +36,16 @@ class CreateHook extends Command
             $this->info("Event name not found , please create an event first");
             return;
         }
-        Webhook::create([
-            'event_id' => $event->id,
-            'callback_url' => $this->argument('callback_url')
-        ]);
 
-        $this->info("a new webhook has been created ...");
+        $webhooks = Webhook::where('event_id', $event->id)->get()->toArray();
+        foreach ($webhooks as $webhook) {
+
+            WebhookCallBack::create([
+                "webhook_id" => $webhook['id'],
+                "message" => $this->argument('message')
+            ]);
+        }
+        $this->info("Webhooks callbacks are created successfully");
     }
 
     /**
