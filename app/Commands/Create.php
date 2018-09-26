@@ -2,6 +2,7 @@
 
 namespace App\Commands;
 
+use App\Event;
 use Illuminate\Console\Scheduling\Schedule;
 use LaravelZero\Framework\Commands\Command;
 
@@ -13,7 +14,7 @@ class Create extends Command
      * @var string
      */
     protected $signature = 'create:event 
-    {name: the event name}
+    {name}
     ';
 
     /**
@@ -30,7 +31,11 @@ class Create extends Command
      */
     public function handle()
     {
-        $this->info("Creating a new event ...");
+        Event::create([
+            'name' => $this->argument('name')
+
+        ]);
+        $this->info("a new event has been created ...");
     }
 
     /**
