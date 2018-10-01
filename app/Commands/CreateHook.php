@@ -3,6 +3,7 @@
 namespace App\Commands;
 
 use App\Event;
+use App\Validations\Validator;
 use App\Webhook;
 use Illuminate\Console\Scheduling\Schedule;
 use LaravelZero\Framework\Commands\Command;
@@ -25,20 +26,16 @@ class CreateHook extends Command
 
     /**
      * Execute the console command.
-     *
+     * @throws
      * @return mixed
      */
     public function handle()
     {
         $event = Event::where('name', $this->argument('event_name'))->first();
-        if ($event ==null) {
-            $this->info("Event name not found , please create an event first");
-            return;
-        }
-        if (!(preg_match('%^(?:(?:https?|ftp)://)(?:\S+(?::\S*)?@|\d{1,3}(?:\.\d{1,3}){3}|(?:(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)(?:\.(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)*(?:\.[a-z\x{00a1}-\x{ffff}]{2,6}))(?::\d+)?(?:[^\s]*)?$%iu', $this->argument('callback_url')))) {
-            $this->info("This is not a valid URL");
-            return;
-        }
+
+        Validator::eventValidation($event);
+
+        Validator::urlValidation($this->argument('url'));
 
         $event->webhooks()->create([
             'callback_url' => $this->argument('callback_url')

@@ -3,6 +3,7 @@
 namespace App\Commands;
 
 use App\Event;
+use App\Validations\Validator;
 use App\Webhook;
 use App\WebhookCallBack;
 use Illuminate\Console\Scheduling\Schedule;
@@ -26,23 +27,14 @@ class Dispatch extends Command
 
     /**
      * Execute the console command.
-     *
+     * @throws
      * @return mixed
      */
     public function handle()
     {
         $event = Event::where('name', $this->argument('event_name'))->first();
-        if ($event ==null) {
-            $this->info("Event name not found , please create an event first");
-            return;
-        }
-
-        $webhooks = Webhook::where('event_id', $event->id)->get();
-        $webhooks->each(function ($item, $key) {
-            $item->webhookcallback()->create([
-                "message" => $this->argument('message')
-            ]);
-        });
+        Validator::eventValidation($event);
+        $event->webhooks->each->addWebhook($this->argument('message'));
 
         $this->info("Webhooks callbacks are created successfully");
     }

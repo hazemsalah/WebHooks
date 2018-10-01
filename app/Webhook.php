@@ -26,4 +26,15 @@ class Webhook extends Model
     {
         return $this->hasOne(WebhookCallBack::class);
     }
+
+    /**
+     * creating a new webhook callback
+     * @param $message
+     */
+    public function addWebhook($message)
+    {
+        $this->webhookcallback()->create([
+            "message" => $message
+        ]);
+    }
 }

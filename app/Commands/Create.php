@@ -3,6 +3,7 @@
 namespace App\Commands;
 
 use App\Event;
+use App\Validations\Validator;
 use Illuminate\Console\Scheduling\Schedule;
 use LaravelZero\Framework\Commands\Command;
 
@@ -26,11 +27,13 @@ class Create extends Command
 
     /**
      * Execute the console command.
-     *
+     * @throws
      * @return mixed
      */
     public function handle()
     {
+        Validator::eventNameValidation($this->argument('name'));
+
         Event::create([
             'name' => $this->argument('name')
 
