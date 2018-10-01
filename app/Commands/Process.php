@@ -47,42 +47,21 @@ class Process extends Command
                 }
             } catch (\Exception $e) {
                 $dividedCode = intdiv($e->getCode(), 100);
+                $nextSchedulingTime = [
+                    0 => 1,
+                    1 => 5,
+                    5 => 10,
+                    10 => 30,
+                    30 => 60,
+                    60 => 120,
+                    120 => 300,
+                    300 => 600,
+                    600 => 1440
+                ];
+
                 if ($dividedCode == 4 || $dividedCode == 5) {
-                    if ($item->scheduled_waiting_time == 0) {
-                        $item->scheduled_waiting_time = 1;
-                    } else {
-                        if ($item->scheduled_waiting_time == 1) {
-                            $item->scheduled_waiting_time = 5;
-                        } else {
-                            if ($item->scheduled_waiting_time == 5) {
-                                $item->scheduled_waiting_time = 10;
-                            } else {
-                                if ($item->scheduled_waiting_time == 10) {
-                                    $item->scheduled_waiting_time = 30;
-                                } else {
-                                    if ($item->scheduled_waiting_time == 30) {
-                                        $item->scheduled_waiting_time = 60;
-                                    } else {
-                                        if ($item->scheduled_waiting_time == 60) {
-                                            $item->scheduled_waiting_time = 120;
-                                        } else {
-                                            if ($item->scheduled_waiting_time == 120) {
-                                                $item->scheduled_waiting_time = 300;
-                                            } else {
-                                                if ($item->scheduled_waiting_time == 300) {
-                                                    $item->scheduled_waiting_time = 600;
-                                                } else {
-                                                    if ($item->scheduled_waiting_time == 600) {
-                                                        $item->scheduled_waiting_time = 1440;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    $item->scheduled_waiting_time = $nextSchedulingTime[$item->scheduled_waiting_time];
+
                     $item->save();
                 }
             }
