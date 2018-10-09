@@ -4,26 +4,26 @@ namespace App\Commands;
 
 use App\Event;
 use App\Validations\Validator;
+use App\Webhook;
+use App\WebhookCallBack;
 use Illuminate\Console\Scheduling\Schedule;
 use LaravelZero\Framework\Commands\Command;
 
-class Create extends Command
+class Dispatch extends Command
 {
     /**
      * The signature of the command.
      *
      * @var string
      */
-    protected $signature = 'create:event 
-    {name}
-    ';
+    protected $signature = 'dispatch {event_name} {message}';
 
     /**
      * The description of the command.
      *
      * @var string
      */
-    protected $description = 'Creates a new event';
+    protected $description = 'Dispatches event name with given message.';
 
     /**
      * Execute the console command.
@@ -32,13 +32,11 @@ class Create extends Command
      */
     public function handle()
     {
-        Validator::eventNameValidation($this->argument('name'));
+        $event = Event::where('name', $this->argument('event_name'))->first();
+        Validator::eventValidation($event);
+        $event->webhooks->each->addWebhook($this->argument('message'));
 
-        Event::create([
-            'name' => $this->argument('name')
-
-        ]);
-        $this->info("a new event has been created ...");
+        $this->info("Webhooks callbacks are created successfully");
     }
 
     /**
